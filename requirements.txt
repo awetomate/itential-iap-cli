@@ -1,0 +1,5 @@
+iap-sdk
+pydantic
+python-dotenv
+"typer[all]"
+typer-cli
