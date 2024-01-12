@@ -17,7 +17,7 @@ setuptools.setup(
         "Source": "https://github.com/awetomate/itential-iap-cli",
     },
     classifiers=[
-        "Development Status :: 4 - Alpha",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
         "License :: OSI Approved :: MIT License",
@@ -33,12 +33,13 @@ setuptools.setup(
         "iap-sdk",
         "pydantic >=2.5.0, <3.0.0",
         "python-dotenv",
-        "typer",
+        "typer==0.7.0",
+        "typer-cli==0.0.13",
         "colorama >=0.4.3,<0.5.0",
         "shellingham >=1.3.0,<2.0.0",
-        "rich >=10.11.0,<14.0.0",
-        "typer-cli"
+        "rich >=10.11.0,<14.0.0"
     ],
+    setup_requires=['setuptools-git-versioning'],
     packages=setuptools.find_packages(),
     entry_points={
         'console_scripts': [

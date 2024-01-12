@@ -1,5 +1,8 @@
 iap-sdk
 pydantic
 python-dotenv
-typer[all]
-typer-cli
+typer==0.7.0
+typer-cli==0.0.13
+colorama==0.4.6
+shellingham==1.4.0
+rich==13.7.0
