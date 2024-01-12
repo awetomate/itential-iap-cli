@@ -18,9 +18,9 @@ def add_credentials():
     print(
         "Provide the user credentials to use to authenticate with the Itential servers."
     )
-    print(f"The credentials will be stored at {APP_DIR}")
-    username = typer.prompt("Username: ")
-    password = typer.prompt("Password: ", hide_input=True)
+    print(f"The credentials will be stored in the {CREDENTIALS_FILEPATH} file.")
+    username = typer.prompt("Username")
+    password = typer.prompt("Password", hide_input=True)
 
     if username and password:
         APP_DIR.mkdir(parents=False, exist_ok=True)
@@ -36,9 +36,9 @@ def add_server():
     to load the server values during runtime.
     """
     print(
-        "Provide the server friendly name (will be shown in CLI) and a FQDN/IP address."
+        "Provide a friendly name for the server (will be used for all CLI operations) and an FQDN/IP address."
     )
-    print(f"The server will be stored in the {APP_DIR}/inventory.json file.")
+    print(f"The server will be stored in the {INVENTORY_FILEPATH} file.")
     friendly = typer.prompt("Server Friendly Name")
     fqdn = typer.prompt("Server FQDN or IP")
 
@@ -60,14 +60,14 @@ def add_server():
 
 def add_cluster():
     """
-    Add a server cluster to the inventory. Prompt user for a cluster friendly name and a list of FQDNs.
+    Add a cluster (list of servers) to the inventory. Prompt user for a cluster friendly name and a list of FQDNs.
     Creates a inventory.json file in home directory of user. CLI app will use this file
     to load the server values during runtime.
     """
     print(
-        "Provide the cluster friendly name (will be shown in CLI) and a comma separated list of FQDNs/IP addresses"
+        "Provide a friendly name for the cluster (will be used for all CLI operations) and a comma-separated list of FQDNs/IP addresses."
     )
-    print(f"The cluster will be stored in the {APP_DIR}/inventory.json file.")
+    print(f"The cluster will be stored in the {INVENTORY_FILEPATH} file.")
     friendly = typer.prompt("Cluster Friendly Name")
     fqdn = typer.prompt("Server FQDNs or IP addresses")
 
