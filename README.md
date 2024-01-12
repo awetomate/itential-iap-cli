@@ -49,7 +49,8 @@ Use the --help option to see all available command completions for the current p
 If you have the autocompletion installed, you can just hit TAB-TAB, which will keep autocompleting and showing the available options.
 ```bash
 iap --help
-
+```
+```
  Usage: iap [OPTIONS] COMMAND [ARGS]...
 
  CLI tool for interacting with Itential.
@@ -69,7 +70,8 @@ iap --help
 ```
 ```bash
 iap get --help
-
+```
+```
  Usage: iap get [OPTIONS] COMMAND [ARGS]...
 
  Get resources from your IAP server.
@@ -89,7 +91,8 @@ Define the username and password that will be used to connect to the IAP servers
 The CLI tool will use these credentials for all API calls.
 ```bash
 iap config add credentials
-
+```
+```
 Provide the user credentials to use to authenticate with the Itential servers.
 The credentials will be stored in the /Users/your_user/.iap_cli/.env file.
 Username: your_username
@@ -102,7 +105,8 @@ Add servers and/or clusters to an inventory file. An inventory.json file will cr
 Add individual server:
 ```bash
 iap config add server
-
+```
+```
 Provide a friendly name for the server (will be used for all CLI operations) and an FQDN/IP address.
 The server will be stored in the /Users/your_user/.iap_cli/inventory.json file.
 Server Friendly Name: dev1
@@ -112,7 +116,8 @@ Server FQDN or IP: iap1-dev.domain.com
 Add a server cluster:
 ```bash
 iap config add cluster
-
+```
+```
 Provide a friendly name for the cluster (will be used for all CLI operations) and a comma-separated list of FQDNs/IP addresses.
 The cluster will be stored in the /Users/your_user/.iap_cli/inventory.json file.
 Cluster Friendly Name: devAll
