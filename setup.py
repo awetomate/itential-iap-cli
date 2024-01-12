@@ -3,7 +3,7 @@ import pathlib
 import setuptools
 
 setuptools.setup(
-    name="iap_sdk",
+    name="iap_cli",
     version="2024.1a1",
     description="Lightweight CLI tool to simplify the process of interacting with the Itential Automation Platform.",
     long_description=pathlib.Path("README.md").read_text(),
@@ -31,11 +31,19 @@ setuptools.setup(
     python_requires=">=3.9,<3.12",
     install_requires=[
         "iap-sdk",
-        "pydantic",
+        "pydantic >=2.5.0, <3.0.0",
         "python-dotenv",
-        "typer[all]",
+        "typer",
+        "colorama >=0.4.3,<0.5.0",
+        "shellingham >=1.3.0,<2.0.0",
+        "rich >=10.11.0,<14.0.0",
         "typer-cli"
     ],
     packages=setuptools.find_packages(),
+    entry_points={
+        'console_scripts': [
+            'iap = iap_cli:iap',
+        ]
+    },
     include_package_data=True,
 )
