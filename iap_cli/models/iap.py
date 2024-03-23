@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field, conint, constr
 
@@ -10,13 +10,13 @@ from iap_cli.models.enums import Method, State
 class Query(BaseModel):
     endpoint: str
     method: Optional[Method] = Field("get", description="HTTP method")
-    data: Dict = None
-    jsonbody: Dict = None
-    params: Dict = None
+    data: dict = None
+    jsonbody: dict = None
+    params: dict = None
 
 
 class AdaptersHealthResult(BaseModel):
-    id: Optional[str] = Field(None, examples=["AdminEssentials"])
+    id: Optional[str] = Field(None, examples=["ServiceNow"])
     package_id: Optional[constr(pattern=r"^@[-_.a-z]+/.+")] = Field(
         "",
         description="The model used by the service",
@@ -26,7 +26,7 @@ class AdaptersHealthResult(BaseModel):
     type: Optional[str] = None
     description: Optional[str] = Field(None, examples=["A basic description"])
     state: Optional[State] = None
-    connection: Optional[Dict[str, Any]] = None
+    connection: Optional[dict[str, Any]] = None
     routePrefix: Optional[str] = Field(None, examples=["admin", "search"])
 
     class Config:
@@ -34,7 +34,7 @@ class AdaptersHealthResult(BaseModel):
 
 
 class AdaptersHealthGetResponse(BaseModel):
-    results: Optional[List[AdaptersHealthResult]] = None
+    results: Optional[list[AdaptersHealthResult]] = None
     total: Optional[conint(ge=0)] = Field(
         None, description="The total number of adapters", examples=[1, 5, 10, 20, 50]
     )
@@ -51,7 +51,7 @@ class ApplicationsHealthResult(BaseModel):
     type: Optional[str] = None
     description: Optional[str] = Field(None, examples=["A basic description"])
     state: Optional[State] = None
-    connection: Optional[Dict[str, Any]] = None
+    connection: Optional[dict[str, Any]] = None
     routePrefix: Optional[str] = Field(None, examples=["admin", "search"])
 
     class Config:
@@ -59,7 +59,7 @@ class ApplicationsHealthResult(BaseModel):
 
 
 class ApplicationsHealthGetResponse(BaseModel):
-    results: Optional[List[ApplicationsHealthResult]] = None
+    results: Optional[list[ApplicationsHealthResult]] = None
     total: Optional[conint(ge=0)] = Field(
         None,
         description="The total number of applications",

@@ -1,8 +1,9 @@
 import json
 
 import typer
-from iap_cli.config import APP_DIR, CREDENTIALS_FILEPATH, INVENTORY_FILEPATH
 from rich import print
+
+from iap_cli.config import APP_DIR, CREDENTIALS_FILEPATH, INVENTORY_FILEPATH
 
 
 def add_config():
@@ -24,7 +25,7 @@ def add_credentials():
 
     if username and password:
         APP_DIR.mkdir(parents=False, exist_ok=True)
-        with open(CREDENTIALS_FILEPATH, "w") as f:
+        with open(CREDENTIALS_FILEPATH, "w", encoding="utf-8") as f:
             f.write(f'USERNAME = "{username}"\n')
             f.write(f'PASSWORD = "{password}"\n')
 
@@ -46,15 +47,15 @@ def add_server():
     if not INVENTORY_FILEPATH.exists():
         INVENTORY_FILEPATH.touch()
         json_object = json.dumps({}, indent=4)
-        with open(INVENTORY_FILEPATH, "w") as f:
+        with open(INVENTORY_FILEPATH, "w", encoding="utf-8") as f:
             f.write(json_object)
 
     if friendly and fqdn:
-        with open(INVENTORY_FILEPATH) as f:
+        with open(INVENTORY_FILEPATH, encoding="utf-8") as f:
             servers = json.load(f)
         servers[friendly.strip()] = fqdn.strip()
         json_object = json.dumps(servers, indent=4)
-        with open(INVENTORY_FILEPATH, "w") as f:
+        with open(INVENTORY_FILEPATH, "w", encoding="utf-8") as f:
             f.write(json_object)
 
 
@@ -77,10 +78,10 @@ def add_cluster():
         INVENTORY_FILEPATH.touch()
 
     if friendly and fqdn:
-        with open(INVENTORY_FILEPATH) as f:
+        with open(INVENTORY_FILEPATH, encoding="utf-8") as f:
             servers = json.load(f)
         fqdn_list = [f.strip() for f in fqdn.split(",")]
         servers[friendly.strip()] = fqdn_list
         json_object = json.dumps(servers, indent=4)
-        with open(INVENTORY_FILEPATH, "w") as f:
+        with open(INVENTORY_FILEPATH, "w", encoding="utf-8") as f:
             f.write(json_object)

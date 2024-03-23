@@ -1,6 +1,5 @@
 import pathlib
 
-
 APP_DIR = pathlib.Path.home() / ".iap_cli"
 # CONFIG_FILENAME = "config.toml"
 # CONFIG_FILEPATH = APP_DIR / CONFIG_FILENAME
