@@ -1,14 +1,17 @@
 """
 Main Typer app for root commands
 """
-__version__ = "0.0.1"
+
+__version__ = "2024.3a1"
 
 import typer
+from rich import print
+
 from iap_cli.commands.config.app import config_app
 from iap_cli.commands.get.app import get_app
 from iap_cli.commands.restart.app import restart_app
-from rich import print
 
+# define typer app
 main_app = typer.Typer(
     no_args_is_help=True,
     rich_markup_mode="rich",

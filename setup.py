@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="iap_cli",
-    version="2024.1a1",
+    version="2024.3a1",
     description="Lightweight CLI tool to simplify the process of interacting with the Itential Automation Platform.",
     long_description=pathlib.Path("README.md").read_text(),
     long_description_content_type="text/markdown",

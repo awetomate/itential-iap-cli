@@ -1,6 +1,8 @@
 import typer
+
 from iap_cli.commands.config.add import add_cluster, add_credentials, add_server
 
+# define typer apps
 config_app = typer.Typer(
     no_args_is_help=True,
     rich_markup_mode="rich",
