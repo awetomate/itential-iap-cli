@@ -28,3 +28,4 @@ class State(Enum):
     STOPPED = "STOPPED"
     RUNNING = "RUNNING"
     DELETED = "DELETED"
+    STARTING = "STARTING"
