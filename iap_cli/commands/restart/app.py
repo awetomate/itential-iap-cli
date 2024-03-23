@@ -1,6 +1,6 @@
-from typing import Dict, List
-
 import typer
+from rich import print
+
 from iap_cli.enums import Applications
 from iap_cli.utils import (
     complete_application_name,
@@ -9,8 +9,8 @@ from iap_cli.utils import (
     get_servers_from_inventory,
     runner,
 )
-from rich import print
 
+# define typer app
 restart_app = typer.Typer(
     no_args_is_help=True,
     rich_markup_mode="rich",
@@ -18,7 +18,7 @@ restart_app = typer.Typer(
 )
 
 
-def restart_adapter(host: str, adapter: str) -> List[Dict]:
+def restart_adapter(host: str, adapter: str) -> list[dict]:
     """
     Start (if adapter is stopped) or restart an adapter in IAP.
 
@@ -37,7 +37,7 @@ def restart_adapter(host: str, adapter: str) -> List[Dict]:
         print(e)
 
 
-def restart_application(host: str, application: str) -> List[Dict]:
+def restart_application(host: str, application: str) -> list[dict]:
     """
     Start (if application is stopped) or restart an application in IAP.
 
@@ -65,11 +65,11 @@ def adapter(
     hosts: str = typer.Argument(
         ..., help="The target IAP server(s).", autocompletion=complete_server_name
     ),
-) -> List[Dict]:
+) -> list[dict]:
     """Start (if adapter is stopped) or restart an adapter in IAP."""
     hosts = get_servers_from_inventory(hosts)
     try:
-        data = runner(restart_adapter, hosts, name)
+        data = runner(restart_adapter, hosts, args={"adapter": name})
         print(data)
     except Exception as e:
         print(e)
@@ -79,13 +79,13 @@ def adapter(
 def application(
     name: str = typer.Argument(
         ...,
-        help=f"The target application name.",
+        help="The target application name.",
         autocompletion=complete_application_name,
     ),
     hosts: str = typer.Argument(
         ..., help="The target IAP server(s).", autocompletion=complete_server_name
     ),
-) -> List[Dict]:
+) -> list[dict]:
     """Start (if application is stopped) or restart an application in IAP. Possible values are:\n
     AGManager
     AppArtifacts
@@ -106,7 +106,7 @@ def application(
     application = [app.value for app in Applications if app.name == name]
     hosts = get_servers_from_inventory(hosts)
     try:
-        data = runner(restart_application, hosts, application[0])
+        data = runner(restart_application, hosts, args={"application": application[0]})
         print(data)
     except Exception as e:
         print(e)
