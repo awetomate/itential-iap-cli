@@ -1,6 +1,10 @@
-from typing import Dict, List
+from operator import itemgetter
 
 import typer
+from rich import print
+from rich.console import Console
+from rich.table import Table
+
 from iap_cli.models.iap import (
     AdaptersHealthGetResponse,
     AdaptersHealthResult,
@@ -13,10 +17,8 @@ from iap_cli.utils import (
     get_servers_from_inventory,
     runner,
 )
-from rich import print
-from rich.console import Console
-from rich.table import Table
 
+# define Typer app
 get_app = typer.Typer(
     no_args_is_help=True,
     rich_markup_mode="rich",
@@ -62,10 +64,10 @@ def adapters(
     )
 ) -> AdaptersHealthResult:
     """Get the health of all [bold]adapters[/bold] for one or more servers."""
-    hosts = get_servers_from_inventory(hosts)
+    hostnames = get_servers_from_inventory(hosts)
     try:
-        data = runner(get_adapters_health, hosts)
-        render_adapter_report(data)
+        data = runner(get_adapters_health, hostnames, ordered=True)
+        render_adapter_report(data, env=hosts)
     except Exception as e:
         print(e)
 
@@ -77,45 +79,93 @@ def applications(
     )
 ) -> ApplicationsHealthResult:
     """Get the health of all [bold]applications[/bold] for one more servers."""
-    hosts = get_servers_from_inventory(hosts)
+    hostnames = get_servers_from_inventory(hosts)
     try:
-        data = runner(get_applications_health, hosts)
-        render_application_report(data)
+        data = runner(get_applications_health, hostnames, ordered=True)
+        render_application_report(data, env=hosts)
     except Exception as e:
         print(e)
 
 
-def render_adapter_report(data: List[Dict]) -> None:
+def render_adapter_report(data: list[dict], env: str) -> None:
     """
     Render Adapter Status Report table using the 'rich' package
 
     :param data: API results response returned by the 'runner' helper function.
+    :param env: Name of the environment/hosts. Used for report title.
     """
-    columns = ["Package ID", "Adapter ID", "State", "Connection"]
-    for d in data:
-        table = Table(title=f"Adapter Status Report {d['host']}")
-        td = d["response"]
-        for column in columns:
-            table.add_column(column, justify="left", no_wrap=True)
-        for row in td:
-            table.add_row(row.package_id, row.id, row.state, row.connection["state"])
-        console.print()
-        console.print(table)
+    # get a set of all unique adapter names
+    adapter_names = {adapter.id for host in data for adapter in host["response"]}
+    # create table rows -> dictionaries listing the adapter status for each host
+    rows = []
+    for name in adapter_names:
+        row = {}
+        row["package_id"] = ""
+        row["id"] = name
+        for host in data:
+            for adapter in host["response"]:
+                if name in adapter.id:
+                    row["package_id"] = adapter.package_id
+                    row[f"{host['host']}"] = (
+                        f"{adapter.state} / {adapter.connection['state']}"
+                    )
+        rows.append(row)
+    # sort rows by packackge ID and then by Adapter ID
+    rows = sorted(rows, key=itemgetter("package_id", "id"))
+    # create table
+    columns = ["Package ID", "Adapter ID"]
+    for host in data:
+        columns += [f"{host['host'].split('.')[0]}"]
+    table = Table(title=f"Adapter Status Report {env}")
+    for column in columns:
+        table.add_column(column, justify="left", no_wrap=True)
+    for row in rows:
+        # if the adapter status on any of the hosts is not 'RUNNING / ONLINE', highlight the row
+        errors = set(list(row.values())[2:]) - {"RUNNING / ONLINE"}
+        if errors:
+            style = "yellow"
+        else:
+            style = None
+        table.add_row(*row.values(), style=style)
+    console.print()
+    console.print(table)
 
 
-def render_application_report(data: List[Dict]) -> None:
+def render_application_report(data: list[dict], env: str) -> None:
     """
     Render Application Status Report table using the 'rich' package
 
     :param data: API results response returned by the 'runner' helper function.
+    :param env: Name of the environment/hosts. Used for report title.
     """
-    columns = ["Package ID", "App ID", "State"]
-    for d in data:
-        table = Table(title=f"Application Status Report {d['host']}")
-        td = d["response"]
-        for column in columns:
-            table.add_column(column, justify="left", no_wrap=True)
-        for row in td:
-            table.add_row(row.package_id, row.id, row.state)
-        console.print()
-        console.print(table)
+    # get a set of all unique application names
+    application_names = {app.id for host in data for app in host["response"]}
+    # create table rows -> dictionaries listing the application status for each host
+    rows = []
+    for name in application_names:
+        row = {}
+        row["id"] = name
+        for host in data:
+            for app in host["response"]:
+                if name in app.id:
+                    row[f"{host['host']}"] = app.state
+        rows.append(row)
+    # sort rows by Application ID
+    rows = sorted(rows, key=itemgetter("id"))
+    # create table
+    columns = ["App ID"]
+    for host in data:
+        columns += [f"{host['host'].split('.')[0]}"]
+    table = Table(title=f"Application Status Report {env}")
+    for column in columns:
+        table.add_column(column, justify="left", no_wrap=True)
+    for row in rows:
+        # if the application status on any of the hosts is not 'RUNNING', highlight the row
+        errors = set(list(row.values())[1:]) - {"RUNNING"}
+        if errors:
+            style = "yellow"
+        else:
+            style = None
+        table.add_row(*row.values(), style=style)
+    console.print()
+    console.print(table)
