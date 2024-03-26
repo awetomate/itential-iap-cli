@@ -2,7 +2,7 @@
 Main Typer app for root commands
 """
 
-__version__ = "2024.3a1"
+__version__ = "2024.3a2"
 
 import typer
 from rich import print
