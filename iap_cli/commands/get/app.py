@@ -104,7 +104,7 @@ def render_adapter_report(data: list[dict], env: str) -> None:
         row["id"] = name
         for host in data:
             for adapter in host["response"]:
-                if name in adapter.id:
+                if adapter.id == name:
                     row["package_id"] = adapter.package_id
                     row[f"{host['host']}"] = (
                         f"{adapter.state} / {adapter.connection['state']}"
@@ -147,7 +147,7 @@ def render_application_report(data: list[dict], env: str) -> None:
         row["id"] = name
         for host in data:
             for app in host["response"]:
-                if name in app.id:
+                if app.id == name:
                     row[f"{host['host']}"] = app.state
         rows.append(row)
     # sort rows by Application ID
