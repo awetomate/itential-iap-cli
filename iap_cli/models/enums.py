@@ -25,7 +25,8 @@ class Method(Enum):
 
 class State(Enum):
     DEAD = "DEAD"
-    STOPPED = "STOPPED"
-    RUNNING = "RUNNING"
     DELETED = "DELETED"
+    DISCONNECT = "DISCONNECT"
+    RUNNING = "RUNNING"
     STARTING = "STARTING"
+    STOPPED = "STOPPED"
